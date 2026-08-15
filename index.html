@@ -223,6 +223,8 @@ section{padding:clamp(5rem,11vw,9.5rem) 0;border-top:1px solid var(--line)}
 .card.locked h3{color:var(--ink-faint);letter-spacing:.06em}
 .card.locked:hover h3{color:var(--ink-dim)}
 .card.locked::before{background:linear-gradient(to top,rgba(10,7,16,.96) 18%,rgba(20,13,30,.75) 100%)}
+.card.locked .art{filter:saturate(.25) brightness(.45) blur(1.5px)}
+.card.locked:hover .art{filter:saturate(.7) brightness(.65) blur(0)}
 
 /* art strip */
 .strip-sec{padding-block:clamp(3.5rem,7vw,5.5rem)}
@@ -410,11 +412,13 @@ footer{
       <p class="whisper">He has already decided how this ends. Say something that makes him reconsider.</p>
     </article>
     <article class="card rv">
+      <div class="art" style="background-image:url('assets/dracula.jpg')"></div>
       <span class="cat">// Fantasy</span>
       <h3>Dracula</h3>
       <p class="whisper">He will be perfectly courteous. That is the part you should worry about.</p>
     </article>
     <article class="card rv">
+      <div class="art" style="background-image:url('assets/socrates.jpg')"></div>
       <span class="cat">// Historical</span>
       <h3>Socrates</h3>
       <p class="whisper">Every answer you give becomes his next question. Choose the first one carefully.</p>
@@ -426,6 +430,7 @@ footer{
       <p class="whisper">No monsters. No stakes. Just a stranger, a short window, and everything to lose.</p>
     </article>
     <article class="card locked rv">
+      <div class="art" style="background-image:url('assets/lich.jpg')"></div>
       <span class="cat">// Classified</span>
       <h3>█████</h3>
       <p class="whisper">More of the roster surfaces closer to launch.</p>
