@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MINDFRAME — Change Your POV</title>
+<meta name="description" content="An AI-native social challenge RPG. Win with wits and words. Coming soon.">
+<meta name="theme-color" content="#0a0710">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+
+<meta property="og:title" content="MINDFRAME — Change Your POV">
+<meta property="og:description" content="An AI-native social challenge RPG. Win with wits and words.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/hero-eclipse.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0a0710;
+  --bg-lift:#140d1e;
+  --ink:#f0ebe0;
+  --ink-dim:#9b93a6;
+  --ink-faint:#544d62;
+  --gold:#f0b542;
+  --gold-deep:#c87f34;
+  --neon:#b95df0;
+  --neon-pink:#ef5fd4;
+  --teal:#38dcc4;
+  --line:rgba(240,235,224,.13);
+  --display:'Space Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,'Cascadia Code',Consolas,monospace;
+  --pad:clamp(1.25rem,5vw,5rem);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--display);
+  font-weight:400;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* film grain */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  pointer-events:none;z-index:100;
+  opacity:.04;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.label{
+  font-family:var(--mono);
+  font-size:.68rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--ink-dim);
+}
+.label .tick{color:var(--gold)}
+.label.violet .tick{color:var(--neon)}
+
+.wrap{max-width:1240px;margin:0 auto;padding-inline:var(--pad)}
+
+/* ── nav ─────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem var(--pad);
+  backdrop-filter:blur(14px);
+  background:linear-gradient(to bottom,rgba(10,7,16,.92),rgba(10,7,16,0));
+  transition:border-color .4s,background .4s;
+  border-bottom:1px solid transparent;
+}
+nav.stuck{border-bottom-color:var(--line);background:rgba(10,7,16,.92)}
+.mark{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:var(--ink)}
+.mark img{width:30px;height:30px;display:block}
+.mark span{
+  font-family:var(--mono);font-size:.8rem;font-weight:500;
+  letter-spacing:.34em;text-transform:uppercase;
+}
+
+.btn{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;
+  border:1px solid var(--line);
+  background:transparent;
+  padding:.62rem 1.1rem;
+  display:inline-block;
+  cursor:pointer;
+  transition:border-color .25s,color .25s,background .25s,box-shadow .25s;
+  white-space:nowrap;
+}
+.btn:hover,.btn:focus-visible{border-color:var(--gold);color:var(--gold);outline:none}
+.btn-solid{
+  background:linear-gradient(160deg,var(--gold),var(--gold-deep));
+  border-color:transparent;color:#1c1006;font-weight:500;
+}
+.btn-solid:hover,.btn-solid:focus-visible{
+  background:transparent;color:var(--gold);border-color:var(--gold);
+  box-shadow:0 0 22px rgba(240,181,66,.25);
+}
+
+/* ── hero ────────────────────────────── */
+header{
+  min-height:100svh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:8rem 0 4rem;
+  position:relative;
+}
+.hero-art{
+  position:absolute;inset:0;z-index:-2;overflow:hidden;
+}
+.hero-art img{
+  width:100%;height:100%;object-fit:cover;object-position:center 20%;
+  display:block;
+}
+.hero-art::after{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(to right,rgba(10,7,16,.94) 0%,rgba(10,7,16,.55) 55%,rgba(10,7,16,.35) 100%),
+    linear-gradient(to top,var(--bg) 4%,rgba(10,7,16,.25) 40%,rgba(10,7,16,.45) 100%);
+}
+.eyebrow{display:flex;align-items:center;gap:.85rem;margin-bottom:2.2rem}
+.eyebrow .rule{height:1px;flex:1;max-width:110px;background:var(--line)}
+
+h1{
+  font-size:clamp(3.1rem,13.5vw,11.5rem);
+  font-weight:700;
+  line-height:.86;
+  letter-spacing:-.045em;
+  text-transform:uppercase;
+}
+h1 .em{
+  background:linear-gradient(160deg,var(--gold) 20%,var(--gold-deep) 80%);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;
+}
+
+.hook{
+  margin-top:2.6rem;
+  max-width:46ch;
+  font-size:clamp(1rem,2.1vw,1.28rem);
+  color:var(--ink-dim);
+  line-height:1.62;
+}
+.hook b{color:var(--ink);font-weight:500}
+
+.cta-row{display:flex;flex-wrap:wrap;gap:.85rem;margin-top:2.8rem}
+
+.scroll-note{
+  margin-top:auto;padding-top:4rem;
+  display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;
+}
+
+/* ── sections ────────────────────────── */
+section{padding:clamp(5rem,11vw,9.5rem) 0;border-top:1px solid var(--line)}
+.sec-head{margin-bottom:clamp(2.5rem,5vw,4rem)}
+.sec-head h2{
+  font-size:clamp(1.9rem,5.2vw,3.6rem);
+  font-weight:700;line-height:1.02;letter-spacing:-.03em;
+  text-transform:uppercase;margin-top:1.1rem;max-width:20ch;
+}
+.sec-head p{margin-top:1.3rem;max-width:52ch;color:var(--ink-dim);font-size:clamp(.98rem,1.7vw,1.1rem)}
+
+/* three tenets */
+.tenets{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.tenet{background:var(--bg);padding:clamp(1.6rem,3.4vw,2.6rem)}
+.tenet .n{font-family:var(--mono);font-size:.68rem;color:var(--gold);letter-spacing:.2em}
+.tenet h3{font-size:clamp(1.35rem,3vw,1.85rem);font-weight:700;text-transform:uppercase;letter-spacing:-.02em;line-height:1.05;margin:1.5rem 0 .8rem;min-height:2.1em}
+.tenet p{color:var(--ink-dim);font-size:.95rem;max-width:34ch}
+
+/* opponents — 5 cards, explicit breakpoints so no orphan cells */
+.roster{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+@media (min-width:640px){
+  .roster{grid-template-columns:repeat(2,1fr)}
+  .card.locked{grid-column:span 2}
+}
+@media (min-width:1100px){
+  .roster{grid-template-columns:repeat(5,1fr)}
+  .card.locked{grid-column:auto}
+}
+.card{
+  background:var(--bg);
+  padding:clamp(1.5rem,3vw,2.1rem);
+  min-height:clamp(280px,34vw,360px);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.card .art{
+  position:absolute;inset:0;z-index:0;
+  background-size:cover;background-position:center 18%;
+  filter:saturate(.55) brightness(.6);
+  transition:filter .5s,transform .5s;
+}
+.card::before{
+  content:'';position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to top,rgba(10,7,16,.96) 18%,rgba(10,7,16,.45) 55%,rgba(10,7,16,.35) 100%);
+  transition:opacity .5s;
+}
+.card:hover .art{filter:saturate(1) brightness(.85);transform:scale(1.04)}
+.card > *:not(.art){position:relative;z-index:2}
+.card .cat{font-family:var(--mono);font-size:.63rem;letter-spacing:.2em;color:var(--ink-dim);text-transform:uppercase;transition:color .35s}
+.card:hover .cat{color:var(--gold)}
+.card h3{
+  margin-top:auto;padding-top:2.5rem;
+  font-size:clamp(1.5rem,3.4vw,1.9rem);font-weight:700;
+  text-transform:uppercase;letter-spacing:-.025em;line-height:.98;
+}
+.card .whisper{
+  margin-top:.9rem;font-size:.9rem;color:var(--ink-dim);
+  max-width:30ch;line-height:1.5;
+  opacity:.75;transition:opacity .35s,color .35s;
+}
+.card:hover .whisper{opacity:1;color:var(--ink)}
+.card.locked h3{color:var(--ink-faint);letter-spacing:.06em}
+.card.locked:hover h3{color:var(--ink-dim)}
+.card.locked::before{background:linear-gradient(to top,rgba(10,7,16,.96) 18%,rgba(20,13,30,.75) 100%)}
+
+/* art strip */
+.strip-sec{padding-block:clamp(3.5rem,7vw,5.5rem)}
+.strip-head{display:flex;align-items:center;gap:.85rem;margin-bottom:2rem}
+.strip-head .rule{height:1px;flex:1;background:var(--line)}
+.strip{
+  display:flex;gap:1rem;
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
+  mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
+}
+.strip-track{display:flex;gap:1rem;animation:drift 46s linear infinite;flex-shrink:0}
+@keyframes drift{to{transform:translateX(calc(-100% - 1rem))}}
+.strip:hover .strip-track{animation-play-state:paused}
+.tile{
+  width:clamp(150px,20vw,220px);aspect-ratio:1;flex-shrink:0;
+  border:1px solid var(--line);
+  background-size:cover;background-position:center 20%;
+  filter:saturate(.8);
+  transition:filter .35s,border-color .35s;
+  position:relative;
+}
+.tile:hover{filter:saturate(1.15);border-color:rgba(185,93,240,.55)}
+
+/* classes — 6 cells, 2 or 3 columns divide evenly */
+.classes{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+@media (min-width:760px){.classes{grid-template-columns:repeat(3,1fr)}}
+.cls{
+  background:var(--bg);padding:1.7rem 1.4rem;
+  display:flex;flex-direction:column;gap:.5rem;
+  transition:background .3s,color .3s;
+}
+.cls:hover{background:linear-gradient(160deg,var(--gold),var(--gold-deep));color:#1c1006}
+.cls .name{font-size:clamp(1.05rem,2.3vw,1.32rem);font-weight:700;text-transform:uppercase;letter-spacing:-.015em}
+.cls .verb{font-family:var(--mono);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);transition:color .3s}
+.cls:hover .verb{color:#1c1006;opacity:.72}
+
+/* genre statement */
+.genre{text-align:center;padding-block:clamp(5.5rem,13vw,11rem);position:relative;overflow:hidden}
+.genre-art{position:absolute;inset:0;z-index:-2}
+.genre-art img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.genre-art::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(10,7,16,.88);
+}
+.genre .big{
+  font-size:clamp(2.1rem,7.6vw,5.6rem);
+  font-weight:700;line-height:.98;letter-spacing:-.04em;text-transform:uppercase;
+  max-width:16ch;margin:1.8rem auto 0;
+}
+.genre .big em{
+  font-style:normal;
+  background:linear-gradient(160deg,var(--gold) 20%,var(--gold-deep) 80%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.genre .sub{margin:2.2rem auto 0;max-width:44ch;color:var(--ink-dim);font-size:clamp(.98rem,1.8vw,1.1rem)}
+
+/* closing / access form */
+.close{text-align:center;padding-block:clamp(5rem,12vw,10rem);position:relative}
+.close::before{
+  content:'';position:absolute;inset:0;z-index:-1;
+  background:radial-gradient(80% 100% at 50% 100%,rgba(240,181,66,.1),transparent 62%),
+             radial-gradient(50% 60% at 50% 90%,rgba(185,93,240,.08),transparent 70%);
+}
+.close h2{font-size:clamp(1.8rem,6vw,4.2rem);font-weight:700;line-height:1;letter-spacing:-.035em;text-transform:uppercase;max-width:18ch;margin:1.4rem auto 0}
+.close .sub{margin:1.4rem auto 0;max-width:44ch;color:var(--ink-dim)}
+
+.access-form{
+  margin:2.6rem auto 0;
+  display:flex;gap:.7rem;
+  max-width:520px;
+  flex-wrap:wrap;justify-content:center;
+}
+.access-form input[type=email]{
+  flex:1;min-width:240px;
+  background:var(--bg-lift);
+  border:1px solid var(--line);
+  color:var(--ink);
+  font-family:var(--mono);font-size:.85rem;letter-spacing:.04em;
+  padding:.85rem 1.1rem;
+  transition:border-color .25s,box-shadow .25s;
+}
+.access-form input[type=email]::placeholder{color:var(--ink-faint)}
+.access-form input[type=email]:focus{
+  outline:none;border-color:var(--neon);
+  box-shadow:0 0 18px rgba(185,93,240,.22);
+}
+.access-form .btn-solid{font-size:.72rem;padding:.85rem 1.4rem}
+.access-form .btn-solid[disabled]{opacity:.55;cursor:wait}
+.hp{position:absolute;left:-9999px;opacity:0;pointer-events:none}
+
+.form-note{
+  margin-top:1.1rem;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;
+  min-height:1.2em;
+  color:var(--ink-dim);
+}
+.form-note.ok{color:var(--teal)}
+.form-note.err{color:var(--neon-pink)}
+
+footer{
+  border-top:1px solid var(--line);
+  padding:2.2rem 0;
+  display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+}
+.foot-mark{display:flex;align-items:center;gap:.6rem}
+.foot-mark img{width:20px;height:20px;opacity:.8}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .85s cubic-bezier(.2,.7,.3,1),transform .85s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none}
+  .strip-track{animation:none!important}
+  .strip{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="mark" href="#top">
+    <img src="assets/logo.png" alt="Mindframe logo">
+    <span>Mindframe</span>
+  </a>
+  <a class="btn" href="#access">Request Access</a>
+</nav>
+
+<header id="top" class="wrap">
+  <div class="hero-art" aria-hidden="true"><img src="assets/hero-eclipse.jpg" alt=""></div>
+
+  <div class="eyebrow rv">
+    <span class="label"><span class="tick">//</span> AI-Native Social Challenge RPG</span>
+    <span class="rule"></span>
+  </div>
+
+  <h1 class="rv">Change<br>Your <span class="em">POV</span></h1>
+
+  <p class="hook rv">
+    Step into high-stakes encounters with characters from literature, history, film — and the person
+    across the room. You carry <b>no weapons</b>. You win with <b>wits and words</b>, or you don't win at all.
+  </p>
+
+  <div class="cta-row rv">
+    <a class="btn btn-solid" href="#access">Request Access</a>
+    <a class="btn" href="#duel">See the Premise</a>
+  </div>
+
+  <div class="scroll-note rv">
+    <span class="label"><span class="tick">[</span> Status: In Development <span class="tick">]</span></span>
+    <span class="label">Scroll ↓</span>
+  </div>
+</header>
+
+<section id="duel" class="wrap">
+  <div class="sec-head rv">
+    <span class="label"><span class="tick">//</span> The Premise</span>
+    <h2>Every conversation is a duel</h2>
+    <p>Talk your way in. Or talk your way straight off a cliff. Every encounter ends with someone
+       won over — and it isn't always you.</p>
+  </div>
+
+  <div class="tenets">
+    <div class="tenet rv"><span class="n">01</span><h3>Read Them</h3><p>Every character wants something they won't say out loud. Find it before they find yours.</p></div>
+    <div class="tenet rv"><span class="n">02</span><h3>Choose Your Angle</h3><p>Empathy. Diplomacy. Deception. The right move on the wrong person is still the wrong move.</p></div>
+    <div class="tenet rv"><span class="n">03</span><h3>Live With It</h3><p>They remember. They react. And they are under no obligation to like you by the end.</p></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head rv">
+    <span class="label"><span class="tick">//</span> Selected Opponents</span>
+    <h2>Some of who's waiting</h2>
+    <p>A first look at the roster. Each one has already decided what they think of you.</p>
+  </div>
+
+  <div class="roster">
+    <article class="card rv">
+      <div class="art" style="background-image:url('assets/ahab.jpg')"></div>
+      <span class="cat">// Literature</span>
+      <h3>Captain<br>Ahab</h3>
+      <p class="whisper">He has already decided how this ends. Say something that makes him reconsider.</p>
+    </article>
+    <article class="card rv">
+      <span class="cat">// Fantasy</span>
+      <h3>Dracula</h3>
+      <p class="whisper">He will be perfectly courteous. That is the part you should worry about.</p>
+    </article>
+    <article class="card rv">
+      <span class="cat">// Historical</span>
+      <h3>Socrates</h3>
+      <p class="whisper">Every answer you give becomes his next question. Choose the first one carefully.</p>
+    </article>
+    <article class="card rv">
+      <div class="art" style="background-image:url('assets/girl-cafe.jpg')"></div>
+      <span class="cat">// Modern Day</span>
+      <h3>Girl in<br>the Cafe</h3>
+      <p class="whisper">No monsters. No stakes. Just a stranger, a short window, and everything to lose.</p>
+    </article>
+    <article class="card locked rv">
+      <span class="cat">// Classified</span>
+      <h3>█████</h3>
+      <p class="whisper">More of the roster surfaces closer to launch.</p>
+    </article>
+  </div>
+</section>
+
+<section class="strip-sec">
+  <div class="wrap">
+    <div class="strip-head rv">
+      <span class="label violet"><span class="tick">//</span> From the Encounters</span>
+      <span class="rule"></span>
+    </div>
+  </div>
+  <div class="strip rv" aria-label="Encounter artwork">
+    <div class="strip-track" id="stripA">
+      <div class="tile" style="background-image:url('assets/cyber.jpg')"></div>
+      <div class="tile" style="background-image:url('assets/cleopatra.jpg')"></div>
+      <div class="tile" style="background-image:url('assets/detective.jpg')"></div>
+      <div class="tile" style="background-image:url('assets/king.jpg')"></div>
+      <div class="tile" style="background-image:url('assets/elf.jpg')"></div>
+      <div class="tile" style="background-image:url('assets/plague.jpg')"></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sec-head rv">
+    <span class="label"><span class="tick">//</span> Player Classes</span>
+    <h2>Pick how you fight</h2>
+    <p>Six ways to walk into a room. None of them is a weapon.</p>
+  </div>
+
+  <div class="classes">
+    <div class="cls rv"><span class="name">Trickster</span><span class="verb">Misdirect</span></div>
+    <div class="cls rv"><span class="name">Leader</span><span class="verb">Command</span></div>
+    <div class="cls rv"><span class="name">Expert</span><span class="verb">Outclass</span></div>
+    <div class="cls rv"><span class="name">Empath</span><span class="verb">Disarm</span></div>
+    <div class="cls rv"><span class="name">Idealist</span><span class="verb">Convert</span></div>
+    <div class="cls rv"><span class="name">Charmer</span><span class="verb">Captivate</span></div>
+  </div>
+</section>
+
+<section class="genre">
+  <div class="genre-art" aria-hidden="true"><img src="assets/goddess.jpg" alt=""></div>
+  <div class="wrap">
+    <span class="label rv"><span class="tick">//</span> A New Genre — SRC · Social Roleplaying Challenge</span>
+    <p class="big rv">Don't out-shoot them.<br><em>Out-think them.</em></p>
+    <p class="sub rv">There is no sweeter way to win than beating someone with nothing but your words.</p>
+  </div>
+</section>
+
+<section id="access" class="close wrap">
+  <span class="label rv"><span class="tick">[</span> Coming Soon <span class="tick">]</span></span>
+  <h2 class="rv">Think you can talk your way out of this?</h2>
+  <p class="sub rv">Leave your email. Be first through the door when the encounters open.</p>
+
+  <form class="access-form rv" id="accessForm" novalidate>
+    <label class="hp" aria-hidden="true">Leave this empty
+      <input type="text" name="company" tabindex="-1" autocomplete="off">
+    </label>
+    <input type="email" name="email" id="emailInput" placeholder="you@example.com"
+           autocomplete="email" inputmode="email" required aria-label="Email address">
+    <button class="btn btn-solid" type="submit" id="submitBtn">Request Access</button>
+  </form>
+  <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
+</section>
+
+<footer class="wrap">
+  <span class="foot-mark"><img src="assets/logo.png" alt=""><span class="label">Mindframe © <span id="yr">2026</span></span></span>
+  <span class="label">Change Your POV</span>
+</footer>
+
+<script>
+/* ── Supabase email capture config ─────────────────────────────
+   Fill these two values in (see SETUP-SUPABASE.md), redeploy, done.
+   The anon key is safe to expose IF the table's RLS only allows INSERT. */
+const MINDFRAME_CONFIG = {
+  SUPABASE_URL: "",       // e.g. "https://abcdefgh.supabase.co"
+  SUPABASE_ANON_KEY: ""   // the "anon / public" API key
+};
+
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+const nav = document.getElementById('nav');
+addEventListener('scroll', () => nav.classList.toggle('stuck', scrollY > 40), {passive:true});
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.rv').forEach((el, i) => {
+  el.style.transitionDelay = (Math.min(i % 6, 5) * 55) + 'ms';
+  io.observe(el);
+});
+
+/* duplicate the art strip so the loop is seamless */
+const track = document.getElementById('stripA');
+track.parentElement.appendChild(track.cloneNode(true));
+
+/* ── email form ── */
+const form = document.getElementById('accessForm');
+const note = document.getElementById('formNote');
+const btn  = document.getElementById('submitBtn');
+
+function setNote(msg, cls){ note.textContent = msg; note.className = 'form-note ' + (cls||''); }
+
+form.addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const email = document.getElementById('emailInput').value.trim();
+  const honey = form.querySelector('input[name=company]').value;
+
+  if (honey) return; // bot
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    setNote('// That doesn\'t look like an email address.', 'err');
+    return;
+  }
+  if (!MINDFRAME_CONFIG.SUPABASE_URL || !MINDFRAME_CONFIG.SUPABASE_ANON_KEY) {
+    setNote('// Signups aren\'t live quite yet — check back soon.', 'err');
+    return;
+  }
+
+  btn.disabled = true;
+  setNote('// Transmitting…');
+  try {
+    const res = await fetch(MINDFRAME_CONFIG.SUPABASE_URL + '/rest/v1/signups', {
+      method: 'POST',
+      headers: {
+        'apikey': MINDFRAME_CONFIG.SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + MINDFRAME_CONFIG.SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ email: email.toLowerCase(), source: 'teaser-site' })
+    });
+    if (res.status === 201) {
+      form.reset();
+      setNote('[ ACCESS REQUESTED ] You\'re on the list.', 'ok');
+    } else if (res.status === 409) {
+      setNote('[ ALREADY LISTED ] You\'re on the list — we\'ll be in touch.', 'ok');
+    } else {
+      setNote('// Something glitched (' + res.status + '). Try again in a minute.', 'err');
+    }
+  } catch (e) {
+    setNote('// Network glitch. Try again in a minute.', 'err');
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>
